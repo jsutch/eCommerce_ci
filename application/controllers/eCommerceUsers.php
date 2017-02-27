@@ -59,6 +59,8 @@ class eCommerceUsers extends CI_Controller {
     }
     public function register_with_hash()
     {
+        // Signup Secret
+        $secret = 'judicandus';
         // add a new user
         $user = $this->input->post(); // get post data
         // There's a bug here:" Message: Undefined property: eCommerceUsers::$eCommerceUser"
@@ -75,19 +77,22 @@ class eCommerceUsers extends CI_Controller {
         $this->form_validation->set_rules('first_name','First Name', 'trim|required');
         $this->form_validation->set_rules('last_name','Last Name', 'trim|required');
         $this->form_validation->set_rules('email','Email','trim|required|valid_email');
-        $this->form_validation->set_rules('password','Password','trim|required|min_length[3]|matches[confirm_password]');
-        $this->form_validation->set_rules('confirm_password','Confirm Password', 'trim|required|');
+        $this->form_validation->set_rules('password','Password','trim|required|min_length[3]');
+        $this->form_validation->set_rules('confirm_password','Confirm Password', 'trim|required|matches[confirm_password]');
+        $this->form_validation->set_rules('secret','Secret','trim|required|min_length[1]');
        // hash the password with bcrypt
         $password = $user['password'];
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-        $this->session->set_flashdata('registration_errors',$hashed_password);
+        // $this->session->set_flashdata('registration_errors',$hashed_password);
         if($this->form_validation->run()) //Was the form completed successfully?
         {
-
-            // Create user
-            $this->eCommerceUser_model->add_user_with_hash($user, $hashed_password);
-            // update user flash
-            $this->session->set_flashdata('form_success','You Have Successfully Registered!');
+            if($user['secret'] == $secret)
+            {
+                // Create user
+                $this->eCommerceUser_model->add_user_with_hash($user, $hashed_password, $secret);
+                // update user flash
+                $this->session->set_flashdata('form_success','You Have Successfully Registered!');
+            }
         } 
         else 
         {

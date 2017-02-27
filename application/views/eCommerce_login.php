@@ -44,8 +44,8 @@
                <input type="password" name="password"/><br>
                <label for="confirm_password">Confirm Password</label>
                <input type="password" name="confirm_password"/> <br>
-               <label for="code">Enter Code </label>
-               <input type="text" name="code"/> <br>
+               <label for="secret">Enter Code </label>
+               <input type="text" name="secret"/> <br>
                <input type="submit" value="Register"/>
             </form>
          </div>
